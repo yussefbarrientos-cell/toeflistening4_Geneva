@@ -27,10 +27,13 @@
             </h2>
             <p class="text-gray-600 mb-4">Click play to listen to the organizational psychology lecture. Track the core design paradigms, cognitive metrics, and behavioral adaptions in your notes!</p>
             <div class="bg-gray-100 p-4 rounded-xl flex justify-center">
-                <audio controls class="w-full max-w-xl">
-                    <source src="4.mp3" type="audio/mpeg">
+                <audio id="toeflAudio" controls class="w-full max-w-xl">
+                    <source id="audioSource" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
+            </div>
+            <div id="audioErrorLog" class="hidden mt-3 p-3 bg-amber-50 border border-amber-300 text-amber-900 text-xs rounded-lg text-center">
+                Trying to load audio natively...
             </div>
         </section>
 
@@ -52,7 +55,6 @@
     </div>
 
     <script>
-        // Personalized Quiz Data Array 
         const quizData = [
             {
                 q: "What is the primary objective of the lecture delivered by Professor Yussef?",
@@ -156,11 +158,27 @@
             }
         ];
 
-        // Safely map and build the form once the page initializes
         window.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('quizForm');
             const submitBtn = document.getElementById('submitBtn');
+            const audioEl = document.getElementById('toeflAudio');
+            const sourceEl = document.getElementById('audioSource');
+            const errorLog = document.getElementById('audioErrorLog');
 
+            // Absolute path formulation to eliminate pathing errors
+            const baseDir = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+            const finalAudioUrl = `${baseDir}/4.mp3`;
+            
+            sourceEl.src = finalAudioUrl;
+            audioEl.load();
+
+            // Error verification sequence
+            audioEl.addEventListener('error', () => {
+                errorLog.classList.remove('hidden');
+                errorLog.innerHTML = `⚠️ Player issue pulling <strong>4.mp3</strong>.<br>Verify the file is named lowercase <strong>4.mp3</strong> (not uppercase .MP3) and uploaded directly beside index.html inside GitHub.`;
+            });
+
+            // Generate the quiz elements
             quizData.forEach((item, index) => {
                 const qDiv = document.createElement('div');
                 qDiv.className = "p-5 border border-gray-200 rounded-xl space-y-3 transition-colors duration-200";
@@ -195,14 +213,11 @@
             submitBtn.addEventListener('click', gradeQuiz);
         });
 
-        // Grading Logic Function
         function gradeQuiz() {
             let score = 0;
-            
             quizData.forEach((item, index) => {
                 const selected = document.querySelector(`input[name="question-${index}"]:checked`);
                 const block = document.getElementById(`qBlock-${index}`);
-                
                 block.classList.remove('correct', 'incorrect');
 
                 if (selected) {
@@ -226,7 +241,7 @@
                 resultsDiv.innerHTML = `<h3 class="text-xl font-bold">Great Score! 🎉</h3><p class="text-lg mt-1">You scored <strong>${score} / 10</strong>. Excellent active listening skills!</p>`;
             } else {
                 resultsDiv.className = "mt-8 p-6 rounded-xl text-center border-2 border-red-500 bg-red-50 text-red-900";
-                resultsDiv.innerHTML = `<h3 class="text-xl font-bold">Review Needed! 💪</h3><p class="text-lg mt-1">You scored <strong>${score} / 10</strong>. Analyze your notes and look closely at the incorrect fields.</p>`;
+                resultsDiv.innerHTML = `<h3 class="text-xl font-bold">Review Needed! 💪</h3><p class="text-lg mt-1">You scored <strong>${score} / 10</strong>. Check your notes and double-check incorrect selections.</p>`;
             }
 
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
