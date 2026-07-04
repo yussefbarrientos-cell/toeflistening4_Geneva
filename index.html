@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia Europea - TOEFL Practice Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .correct { border-color: #22c55e !important; background-color: #f0fdf4 !important; }
+        .incorrect { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased">
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <header class="text-center mb-10">
+            <div class="inline-block bg-blue-900 text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-3">
+                Academia Europea
+            </div>
+            <h1 class="text-3xl font-extrabold text-blue-900 sm:text-4xl">TOEFL Prep: Environmental Psychology Quiz</h1>
+            <p class="mt-2 text-lg text-gray-600">Instructor: Yussef &bull; Students: Ranfery, Ronald, Lorena, Alejandra</p>
+        </header>
+
+        <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="p-2 bg-blue-100 text-blue-700 rounded-lg">🎧</span> Step 1: Lecture Listening Practice
+            </h2>
+            <p class="text-gray-600 mb-4">Click play to listen to the organizational psychology lecture. Track the core design paradigms, cognitive metrics, and behavioral adaptions in your notes!</p>
+            <div class="bg-gray-100 p-4 rounded-xl flex justify-center">
+                <audio controls class="w-full max-w-xl">
+                    <source src="4.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="p-2 bg-green-100 text-green-700 rounded-lg">📝</span> Step 2: Multiple Choice Practice
+            </h2>
+
+            <form id="quizForm" class="space-y-6"></form>
+
+            <div id="results" class="hidden mt-8 p-6 rounded-xl text-center border-2"></div>
+
+            <div class="mt-8 text-center">
+                <button type="button" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl transition shadow-md hover:shadow-lg cursor-pointer">
+                    Submit Answers
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Personalized Quiz Data Array 
+        const quizData = [
+            {
+                q: "What is the primary objective of the lecture delivered by Professor Yussef?",
+                options: [
+                    "To critique the corporate management structure of Academia Europea",
+                    "To analyze how different office layouts psychologically impact worker productivity and behavior",
+                    "To explain the architectural history of modern skyscraper construction",
+                    "To argue that all corporate offices should be completely converted to private spaces"
+                ],
+                answer: 1
+            },
+            {
+                q: "According to the lecture, what is a primary theoretical benefit of an open-plan office?",
+                options: [
+                    "It drastically lowers the energy consumption of the building.",
+                    "It encourages spontaneous collaboration and breaks down professional hierarchies.",
+                    "It completely eliminates the need for digital communication like email.",
+                    "It provides every employee with a high degree of personal autonomy."
+                ],
+                answer: 1
+            },
+            {
+                q: "What does psychological data reveal as the most prominent drawback of open-plan environments?",
+                options: [
+                    "Excessive physical fatigue among workers",
+                    "A complete lack of modern technological tools",
+                    "Acoustic distraction that strains working memory and decreases productivity",
+                    "An increase in formal, unnecessary meetings"
+                ],
+                answer: 2
+            },
+            {
+                q: "If Alejandra and Ronald are working in an open layout, what does the lecture suggest about their interaction?",
+                options: [
+                    "They will physically move their desks away from each other.",
+                    "The layout theoretically allows them to share project insights fluidly without formal barriers.",
+                    "They will experience a complete loss of verbal communication skills.",
+                    "They are guaranteed to double their cognitive output compared to private offices."
+                ],
+                answer: 1
+            },
+            {
+                q: "How much can low-level speech distraction decrease a worker's cognitive productivity, according to the research cited?",
+                options: [
+                    "Approximately 5%",
+                    "Exactly 15%",
+                    "Up to 50%",
+                    "It has no measurable impact on productivity."
+                ],
+                answer: 1
+            },
+            {
+                q: "Based on the scenario involving Lorena and Ranfery, what happens when an employee is exposed to nearby vocal distractions?",
+                options: [
+                    "The employee’s selective attention is strained as the brain tries to filter out background noise.",
+                    "The employee immediately experiences an increase in creative problem-solving abilities.",
+                    "The employee completely loses the ability to process visual information.",
+                    "The background noise helps the employee enter a state of deep, uninterrupted focus."
+                ],
+                answer: 0
+            },
+            {
+                q: "What psychological need do environmental psychologists say is fulfilled by a 'cellular' or private office?",
+                options: [
+                    "The need for physical exercise during the workday",
+                    "The need for a bright, colorful visual environment",
+                    "The innate human need for physical boundaries, privacy, and autonomy",
+                    "The desire to avoid working on complex cognitive tasks"
+                ],
+                answer: 2
+            },
+            {
+                q: "What unintended behavioral change often occurs when employees feel they are constantly being watched in an open office?",
+                options: [
+                    "They become much more willing to take creative risks.",
+                    "They become highly guarded and less likely to take creative risks.",
+                    "They stop using technology entirely.",
+                    "They report significantly higher job satisfaction levels."
+                ],
+                answer: 1
+            },
+            {
+                q: "How do employees typically respond when they are deprived of physical privacy in the workplace?",
+                options: [
+                    "They stop talking to their coworkers completely.",
+                    "They quit their jobs within the first week.",
+                    "They use artificial means, like headphones and digital messaging, to recreate boundaries.",
+                    "They petition management to completely remove all desks from the building."
+                ],
+                answer: 2
+            },
+            {
+                q: "What is the conclusion regarding the ideal workspace design paradigm?",
+                options: [
+                    "The open-plan design is universally superior for every business sector.",
+                    "The cellular office is the only way to ensure maximum company revenue.",
+                    "Hybrid, activity-based workspaces that balance quiet focus zones with collaborative areas are most effective.",
+                    "Physical workspace design has ultimately been proven irrelevant to human psychology."
+                ],
+                answer: 2
+            }
+        ];
+
+        // Safely map and build the form once the page initializes
+        window.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('quizForm');
+            const submitBtn = document.getElementById('submitBtn');
+
+            quizData.forEach((item, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = "p-5 border border-gray-200 rounded-xl space-y-3 transition-colors duration-200";
+                qDiv.id = `qBlock-${index}`;
+
+                const label = document.createElement('h3');
+                label.className = "font-semibold text-gray-900";
+                label.innerText = `${index + 1}. ${item.q}`;
+                qDiv.appendChild(label);
+
+                item.options.forEach((opt, optIndex) => {
+                    const optWrapper = document.createElement('label');
+                    optWrapper.className = "flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer text-sm text-gray-700";
+                    
+                    const radio = document.createElement('input');
+                    radio.type = "radio";
+                    radio.name = `question-${index}`;
+                    radio.value = optIndex;
+                    radio.className = "mt-1 h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500";
+
+                    const text = document.createElement('span');
+                    text.innerText = opt;
+
+                    optWrapper.appendChild(radio);
+                    optWrapper.appendChild(text);
+                    qDiv.appendChild(optWrapper);
+                });
+
+                form.appendChild(qDiv);
+            });
+
+            submitBtn.addEventListener('click', gradeQuiz);
+        });
+
+        // Grading Logic Function
+        function gradeQuiz() {
+            let score = 0;
+            
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+                const block = document.getElementById(`qBlock-${index}`);
+                
+                block.classList.remove('correct', 'incorrect');
+
+                if (selected) {
+                    const answerIdx = parseInt(selected.value);
+                    if (answerIdx === item.answer) {
+                        score++;
+                        block.classList.add('correct');
+                    } else {
+                        block.classList.add('incorrect');
+                    }
+                } else {
+                    block.classList.add('incorrect'); 
+                }
+            });
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.remove('hidden');
+            
+            if (score >= 7) {
+                resultsDiv.className = "mt-8 p-6 rounded-xl text-center border-2 border-green-500 bg-green-50 text-green-900";
+                resultsDiv.innerHTML = `<h3 class="text-xl font-bold">Great Score! 🎉</h3><p class="text-lg mt-1">You scored <strong>${score} / 10</strong>. Excellent active listening skills!</p>`;
+            } else {
+                resultsDiv.className = "mt-8 p-6 rounded-xl text-center border-2 border-red-500 bg-red-50 text-red-900";
+                resultsDiv.innerHTML = `<h3 class="text-xl font-bold">Review Needed! 💪</h3><p class="text-lg mt-1">You scored <strong>${score} / 10</strong>. Analyze your notes and look closely at the incorrect fields.</p>`;
+            }
+
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
